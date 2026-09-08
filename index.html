@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Olytabi — Professional e-commerce solutions. We design and develop websites that turn your products into online success." />
+<title>Olytabi — Build Your Brand. Grow Your Business.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#22C1C9;
+    --teal-light:#8FE3E6;
+    --orange:#FF6A1A;
+    --peach:#FFC49B;
+    --bg:#0a0a0a;
+    --bg-card:rgba(18,18,18,0.35);
+    --bg-card-hover:rgba(28,28,28,0.5);
+    --text:#f0ece6;
+    --text-dim:rgba(240,236,230,0.55);
+    --text-dimmer:rgba(240,236,230,0.32);
+    --line:rgba(240,236,230,0.1);
+    --line-strong:rgba(240,236,230,0.2);
+    --glass:rgba(14,14,14,0.3);
+    --glass-border:rgba(240,236,230,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:auto;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  ::selection{background:var(--orange);color:white;}
+
+  /* ---------- Custom Cursor ---------- */
+  #cursor{
+    position:fixed;top:0;left:0;
+    width:18px;height:18px;
+    border:1.5px solid var(--text);
+    border-radius:50%;
+    pointer-events:none;
+    z-index:9999;
+    transition:width 0.3s cubic-bezier(.25,.1,.25,1),
+               height 0.3s cubic-bezier(.25,.1,.25,1),
+               border-color 0.3s ease,
+               background 0.3s ease,
+               opacity 0.3s ease;
+    transform:translate(-50%,-50%);
+    mix-blend-mode:difference;
+    opacity:0;
+  }
+  #cursor.visible{opacity:1;}
+  #cursor.expanded{
+    width:56px;height:56px;
+    background:rgba(255,106,26,0.15);
+    border-color:var(--orange);
+  }
+  #cursor-dot{
+    position:fixed;top:0;left:0;
+    width:5px;height:5px;
+    background:var(--text);
+    border-radius:50%;
+    pointer-events:none;
+    z-index:10000;
+    transform:translate(-50%,-50%);
+    transition:opacity 0.3s ease;
+    opacity:0;
+  }
+  #cursor-dot.visible{opacity:1;}
+
+  /* ---------- Film Grain Overlay ---------- */
+  #grain{
+    position:fixed;inset:0;
+    z-index:9000;
+    pointer-events:none;
+    opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-repeat:repeat;
+  }
+
+  /* ---------- Loading Screen HUD ---------- */
+  #loader{
+    position:fixed;inset:0;
+    pointer-events:none;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding-top:280px;
+    z-index:20;
+    transition:opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+  }
+  #loader.phase-out{
+    opacity:0;
+    visibility:hidden;
+  }
+  #loader-bar{
+    width:180px;height:2px;
+    background:rgba(240,236,230,0.12);
+    border-radius:2px;
+    position:relative;overflow:hidden;
+  }
+  #loader-bar-fill{
+    position:absolute;top:0;left:0;height:100%;width:0%;
+    background:linear-gradient(90deg, var(--teal), var(--orange));
+    transition:width 0.08s linear;
+  }
+  #loader-pct{
+    margin-top:14px;
+    font-size:12px;letter-spacing:0.2em;color:var(--text-dimmer);
+    font-variant-numeric:tabular-nums;font-weight:600;
+  }
+
+  /* ---------- Fixed 3D Ring Stage ---------- */
+  #ring-stage{
+    position:fixed;top:0;left:0;
+    width:100vw;height:100vh;
+    z-index:2;
+    pointer-events:none;
+  }
+  #ring-stage canvas{
+    display:block;
+    pointer-events:auto;
+    touch-action:none;
+  }
+
+  /* ---------- OLYTABI Lockup Overlay ---------- */
+  #olytabi-lockup-wrap{
+    position:fixed;
+    top:0;left:0;
+    width:100vw;height:100vh;
+    z-index:3;
+    pointer-events:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 0.4s ease;
+  }
+  #olytabi-lockup{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  #model-anchor{
+    display:inline-block;
+    flex-shrink:0;
+    pointer-events:none;
+    /* Dimensions will be dynamically updated by JS to match 3D model screen projection */
+  }
+  #lytabi-text{
+    display:inline-flex;
+    align-items:center;
+    margin-left:-4px; /* snug kerning next to the 3D O-model */
+    pointer-events:none;
+  }
+  .lytabi-letter{
+    display:inline-block;
+    font-size:clamp(54px, 8.5vw, 130px);
+    font-weight:900;
+    letter-spacing:-0.035em;
+    color:var(--text);
+    opacity:0;
+    transform:translateX(35px);
+    line-height:0.9;
+    will-change:transform, opacity, filter;
+    text-shadow:0 0 40px rgba(0,0,0,0.8);
+  }
+  .lytabi-letter.accent{
+    color:var(--orange);
+  }
+
+  /* ---------- Scroll Indicator ---------- */
+  #scroll-indicator{
+    position:fixed;
+    bottom:40px;left:50%;
+    transform:translateX(-50%);
+    z-index:10;
+    pointer-events:none;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    opacity:0;transition:opacity 0.6s ease;
+  }
+  #scroll-indicator.show{opacity:0.75;}
+  #scroll-indicator span{
+    font-size:10px;letter-spacing:0.25em;text-transform:uppercase;
+    color:var(--text-dim);font-weight:600;
+  }
+  .chevron{
+    width:14px;height:14px;
+    border-right:1.5px solid var(--text-dim);
+    border-bottom:1.5px solid var(--text-dim);
+    transform:rotate(45deg);
+    animation:bounce 2s infinite ease-in-out;
+  }
+  @keyframes bounce{
+    0%,100%{transform:rotate(45deg) translate(0,0);opacity:0.4;}
+    50%{transform:rotate(45deg) translate(5px,5px);opacity:1;}
+  }
+
+  /* ---------- 600vh Scroll Spacer for Hero Sequence ---------- */
+  #scroll-spacer{
+    height:260vh;
+    position:relative;
+    pointer-events:none;
+  }
+
+  .nav-logo{
+    font-weight:900;
+    font-size:20px;
+    letter-spacing:-0.02em;
+    color:var(--text);
+    text-decoration:none;
+  }
+  .nav-logo em{
+    font-style:normal;
+    color:var(--orange);
+  }
+
+  /* ---------- Fixed Nav ---------- */
+  #nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:24px 48px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.6s ease, transform 0.6s ease;
+    background:linear-gradient(to bottom, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0) 100%);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+  }
+  #nav.show{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .nav-spacer{
+    width:100px;
+  }
+  .nav-links{display:flex;gap:36px;list-style:none;}
+  .nav-links a{
+    color:var(--text-dim);text-decoration:none;font-size:13px;font-weight:500;
+    letter-spacing:0.05em;text-transform:uppercase;
+    transition:color 0.25s ease, opacity 0.25s ease;
+    position:relative;
+  }
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a::after{
+    content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+    background:var(--orange);transition:width 0.25s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
+  .nav-cta{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--line-strong);
+    padding:10px 22px;border-radius:100px;
+    font-size:13px;font-weight:600;text-decoration:none;
+    transition:all 0.3s cubic-bezier(.25,.1,.25,1);
+    letter-spacing:0.02em;
+  }
+  .nav-cta:hover{
+    background:var(--text);color:var(--bg);
+    border-color:var(--text);
+    transform:translateY(-1px);
+  }
+
+  /* ---------- Content Sections Container ---------- */
+  #content-sections{
+    position:relative;
+    z-index:4;
+    opacity:0;
+    transition:opacity 0.8s ease;
+    pointer-events:none;
+  }
+  #content-sections.show{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  /* Section Dividers */
+  .section-line{
+    width:100%;height:1px;
+    background:linear-gradient(90deg, transparent, var(--line), transparent);
+    margin:0 auto;
+  }
+
+  /* Kicker / Subtitle Common */
+  .section-kicker{
+    font-size:11px;font-weight:700;
+    letter-spacing:0.25em;text-transform:uppercase;
+    color:var(--orange);margin-bottom:20px;
+    opacity:0;transform:translateY(16px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .section-kicker.in{opacity:1;transform:translateY(0);}
+
+  /* Section Title */
+  .section-title{
+    font-size:clamp(30px,4.5vw,56px);
+    font-weight:800;letter-spacing:-0.03em;
+    line-height:1.15;max-width:760px;
+    opacity:0;transform:translateY(24px);
+    transition:opacity 0.7s cubic-bezier(.16,1,.3,1) 0.1s, transform 0.7s cubic-bezier(.16,1,.3,1) 0.1s;
+  }
+  .section-title.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- Services Section ---------- */
+  .services{
+    padding:140px 48px;
+    max-width:1280px;margin:0 auto;
+    position:relative;
+  }
+  .services-inner{max-width:1120px;margin:0 auto;}
+  .service-list{
+    list-style:none;margin-top:70px;
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .service-item{
+    padding:36px;
+    background:var(--bg-card);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-border);
+    border-radius:18px;
+    display:flex;gap:24px;
+    align-items:flex-start;
+    transition:transform 0.4s cubic-bezier(.25,.1,.25,1),
+               background 0.4s ease,
+               border-color 0.4s ease,
+               box-shadow 0.4s ease,
+               opacity 0.6s ease;
+    opacity:0;transform:translateY(30px);
+  }
+  .service-item.in{
+    opacity:1;transform:translateY(0);
+  }
+  .service-item:hover{
+    transform:translateY(-4px);
+    background:var(--bg-card-hover);
+    border-color:rgba(255,106,26,0.3);
+    box-shadow:0 16px 40px -10px rgba(0,0,0,0.5), 0 0 30px -10px rgba(255,106,26,0.15);
+  }
+  .service-idx{
+    font-size:12px;font-weight:700;letter-spacing:0.1em;
+    color:var(--teal);opacity:0.8;
+    padding-top:4px;
+  }
+  .service-body h3{
+    font-size:19px;font-weight:700;letter-spacing:-0.01em;
+    margin-bottom:8px;color:var(--text);
+  }
+  .service-body p{
+    font-size:14px;line-height:1.6;color:var(--text-dim);
+  }
+
+  /* ---------- Expertise (Six Reasons) Section ---------- */
+  .expertise{
+    padding:140px 48px;
+    position:relative;
+  }
+  .expertise-inner{max-width:1120px;margin:0 auto;}
+  .expertise h2{
+    font-size:clamp(30px,4.5vw,56px);
+    font-weight:800;letter-spacing:-0.03em;
+    line-height:1.15;max-width:760px;margin-bottom:60px;
+    opacity:0;transform:translateY(24px);
+    transition:opacity 0.7s cubic-bezier(.16,1,.3,1) 0.1s, transform 0.7s cubic-bezier(.16,1,.3,1) 0.1s;
+  }
+  .expertise h2.in{opacity:1;transform:translateY(0);}
+  .expertise h2 .accent{color:var(--orange);}
+
+  .check-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  .check-item{
+    padding:28px 24px;
+    background:var(--bg-card);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-border);
+    border-radius:14px;
+    display:flex;align-items:center;gap:16px;
+    font-size:15px;font-weight:600;
+    transition:transform 0.35s ease, border-color 0.35s ease, background 0.35s ease, opacity 0.6s ease;
+    opacity:0;transform:translateY(20px);
+  }
+  .check-item.in{opacity:1;transform:translateY(0);}
+  .check-item:hover{
+    transform:translateY(-2px);
+    border-color:rgba(34,193,201,0.4);
+    background:var(--bg-card-hover);
+  }
+  .check-dot{
+    width:32px;height:32px;border-radius:50%;
+    background:linear-gradient(135deg, rgba(34,193,201,0.2), rgba(255,106,26,0.2));
+    border:1px solid rgba(240,236,230,0.12);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .check-dot svg{width:12px;height:12px;}
+  .expertise-cta{
+    margin-top:60px;
+    padding:44px;
+    background:linear-gradient(135deg, rgba(34,193,201,0.06), rgba(255,106,26,0.06));
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-border);
+    border-radius:20px;
+    display:flex;align-items:center;justify-content:space-between;
+    opacity:0;transform:translateY(20px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .expertise-cta.in{opacity:1;transform:translateY(0);}
+  .expertise-cta p{font-size:15px;color:var(--text-dim);margin-top:6px;}
+
+  /* ---------- MOVED EXISTING ELEMENT (Positioned after Six Reasons, before Footer) ---------- */
+  .moved-hero-section{
+    padding:140px 48px;
+    max-width:1280px;margin:0 auto;
+    position:relative;
+  }
+  .moved-hero-inner{
+    max-width:1120px;margin:0 auto;
+  }
+  .eyebrow-pill{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:11px;font-weight:700;letter-spacing:0.2em;
+    text-transform:uppercase;color:var(--orange);
+    padding:6px 16px;border-radius:100px;
+    background:rgba(255,106,26,0.08);
+    border:1px solid rgba(255,106,26,0.25);
+    margin-bottom:32px;
+    opacity:0;transform:translateY(16px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .eyebrow-pill.in{opacity:1;transform:translateY(0);}
+  .eyebrow-pill span{color:var(--text-dimmer);}
+
+  .moved-headline{
+    font-size:clamp(38px,6vw,84px);
+    font-weight:900;letter-spacing:-0.04em;
+    line-height:1.05;margin-bottom:24px;
+    opacity:0;transform:translateY(24px);
+    transition:opacity 0.7s cubic-bezier(.16,1,.3,1) 0.1s, transform 0.7s cubic-bezier(.16,1,.3,1) 0.1s;
+  }
+  .moved-headline.in{opacity:1;transform:translateY(0);}
+  .moved-headline .accent{
+    background:linear-gradient(135deg, var(--orange), var(--peach));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+
+  .moved-sub{
+    font-size:clamp(16px,1.6vw,20px);
+    line-height:1.6;color:var(--text-dim);
+    max-width:680px;margin-bottom:44px;
+    opacity:0;transform:translateY(20px);
+    transition:opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+  }
+  .moved-sub.in{opacity:1;transform:translateY(0);}
+
+  .cta-row{
+    display:flex;gap:16px;flex-wrap:wrap;margin-bottom:70px;
+    opacity:0;transform:translateY(20px);
+    transition:opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+  }
+  .cta-row.in{opacity:1;transform:translateY(0);}
+  .btn-primary{
+    background:var(--orange);color:white;
+    padding:16px 36px;border-radius:100px;
+    font-size:14px;font-weight:700;text-decoration:none;
+    letter-spacing:0.02em;
+    transition:all 0.3s cubic-bezier(.25,.1,.25,1);
+    box-shadow:0 10px 30px -6px rgba(255,106,26,0.35);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 16px 40px -6px rgba(255,106,26,0.5);
+    filter:brightness(1.1);
+  }
+  .btn-secondary{
+    background:transparent;color:var(--text);
+    padding:16px 36px;border-radius:100px;
+    font-size:14px;font-weight:600;text-decoration:none;
+    border:1px solid var(--line-strong);
+    transition:all 0.3s ease;
+  }
+  .btn-secondary:hover{
+    border-color:var(--text);transform:translateY(-2px);
+    background:rgba(240,236,230,0.04);
+  }
+
+  .traits-row{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    opacity:0;transform:translateY(20px);
+    transition:opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s;
+  }
+  .traits-row.in{opacity:1;transform:translateY(0);}
+  .trait{
+    padding:24px;
+    background:var(--bg-card);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-border);
+    border-radius:14px;
+    transition:transform 0.3s ease, border-color 0.3s ease;
+  }
+  .trait:hover{
+    transform:translateY(-3px);
+    border-color:rgba(255,106,26,0.3);
+  }
+  .trait .num{
+    font-size:11px;font-weight:700;letter-spacing:0.15em;
+    color:var(--teal);margin-bottom:8px;
+  }
+  .trait .label{
+    font-size:14px;font-weight:600;color:var(--text);
+  }
+
+  /* ---------- Footer Section (END) ---------- */
+  footer{
+    padding:120px 48px 48px;
+    border-top:1px solid var(--line);
+    position:relative;
+  }
+  .footer-inner{max-width:1120px;margin:0 auto;}
+  .footer-top{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    gap:48px;flex-wrap:wrap;padding-bottom:80px;
+    opacity:0;transform:translateY(20px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .footer-top.in{opacity:1;transform:translateY(0);}
+  .footer-cta-text{
+    font-size:clamp(26px,3.5vw,44px);
+    font-weight:800;letter-spacing:-0.03em;
+    max-width:540px;line-height:1.2;
+  }
+  .footer-contact{
+    display:flex;flex-direction:column;gap:12px;align-items:flex-end;
+  }
+  .footer-contact a{
+    color:var(--text);text-decoration:none;
+    font-size:clamp(18px,2vw,24px);font-weight:700;
+    transition:color 0.2s ease;
+  }
+  .footer-contact a:hover{color:var(--orange);}
+  .footer-bottom{
+    padding-top:40px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:20px;
+    font-size:12px;color:var(--text-dimmer);
+  }
+  .socials{display:flex;gap:24px;}
+  .socials a{
+    color:var(--text-dim);text-decoration:none;font-weight:600;
+    font-size:12px;letter-spacing:0.1em;
+    transition:color 0.2s ease;
+  }
+  .socials a:hover{color:var(--orange);}
+
+  /* ---------- Responsive ---------- */
+  @media(max-width:860px){
+    body{cursor:auto;}
+    #cursor, #cursor-dot{display:none;}
+    #nav{padding:20px 24px;}
+    .nav-links{display:none;}
+    .services, .expertise, .moved-hero-section, footer{padding:80px 24px;}
+    .service-list{grid-template-columns:1fr;}
+    .check-grid{grid-template-columns:1fr;}
+    .traits-row{grid-template-columns:1fr 1fr;}
+    .expertise-cta{flex-direction:column;gap:24px;text-align:center;}
+    .footer-top{flex-direction:column;align-items:flex-start;}
+    .footer-contact{align-items:flex-start;}
+    .lytabi-letter{
+      font-size:clamp(32px, 8vw, 70px);
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-dot"></div>
+
+  <!-- Film Grain Overlay -->
+  <div id="grain"></div>
+
+  <!-- Loading screen HUD (Overlay on top of main 3D canvas) -->
+  <div id="loader">
+    <div id="loader-bar"><div id="loader-bar-fill"></div></div>
+    <div id="loader-pct">0%</div>
+  </div>
+
+  
+  <!-- Fixed 3D ring stage (Only ONE canvas for the whole page) -->
+  <div id="ring-stage"><canvas id="main-canvas"></canvas></div>
+
+  <!-- OLYTABI Lockup Overlay -->
+  <div id="olytabi-lockup-wrap">
+    <div id="olytabi-lockup">
+      <!-- Invisible anchor matching the 3D model screen bounding box -->
+      <div id="model-anchor"></div>
+      <!-- LYTABI letters revealed right after the 3D model (= O) -->
+      <div id="lytabi-text">
+        <span class="lytabi-letter">L</span>
+        <span class="lytabi-letter">Y</span>
+        <span class="lytabi-letter accent">T</span>
+        <span class="lytabi-letter">A</span>
+        <span class="lytabi-letter">B</span>
+        <span class="lytabi-letter">I</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Down Indicator -->
+  <div id="scroll-indicator">
+    <span>Scroll to Explore</span>
+    <div class="chevron"></div>
+  </div>
+
+  <!-- 600vh Scroll Spacer that drives the entire 3D intro animation sequence -->
+  <div id="scroll-spacer"></div>
+
+  <!-- Fixed Nav -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">OLY<em>T</em>ABI</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#expertise">Expertise</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="#contact">Let's talk</a>
+  </nav>
+
+  <!-- Main Website Content -->
+  <div id="content-sections">
+
+    <!-- 1. SERVICES (MAIN WEBSITE CONTENT) -->
+    <section class="services" id="services">
+      <div class="services-inner">
+        <div class="section-kicker" id="svc-kicker">What's included</div>
+        <h2 class="section-title" id="svc-title">A complete e-commerce solution package, built around your store.</h2>
+        <ul class="service-list">
+          <li class="service-item"><span class="service-idx">01</span><div class="service-body"><h3>Custom website design</h3><p>Modern, responsive and mobile-friendly, built for a smooth shopping experience.</p></div></li>
+          <li class="service-item"><span class="service-idx">02</span><div class="service-body"><h3>Product &amp; catalog management</h3><p>Easy product listing, inventory management and category setup.</p></div></li>
+          <li class="service-item"><span class="service-idx">03</span><div class="service-body"><h3>Secure payment integration</h3><p>UPI, cards, net banking and cash on delivery, all wired up safely.</p></div></li>
+          <li class="service-item"><span class="service-idx">04</span><div class="service-body"><h3>Shipping &amp; delivery setup</h3><p>Integrated with trusted logistics partners for smooth deliveries.</p></div></li>
+          <li class="service-item"><span class="service-idx">05</span><div class="service-body"><h3>SEO optimization</h3><p>Rank higher on search engines and bring in more organic traffic.</p></div></li>
+          <li class="service-item"><span class="service-idx">06</span><div class="service-body"><h3>Branding &amp; UI/UX design</h3><p>A look and feel that matches your identity and attracts customers.</p></div></li>
+          <li class="service-item"><span class="service-idx">07</span><div class="service-body"><h3>Social media integration</h3><p>Connect your store to social platforms for wider reach and sales.</p></div></li>
+          <li class="service-item"><span class="service-idx">08</span><div class="service-body"><h3>Ongoing support &amp; maintenance</h3><p>Technical support, updates and security checks, on an ongoing basis.</p></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-line"></div>
+
+    <!-- 2. SIX REASONS (EXPERTISE) — Positioned ABOVE the moved element -->
+    <section class="expertise" id="expertise">
+      <div class="expertise-inner">
+        <div class="section-kicker" id="exp-kicker">Your online store, our expertise</div>
+        <h2 id="exp-title">Six reasons stores choose <span class="accent">Olytabi</span> to build with.</h2>
+        <div class="check-grid">
+          <div class="check-item"><span class="check-dot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#22C1C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Fully responsive design</div>
+          <div class="check-item"><span class="check-dot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#22C1C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>High conversion rate</div>
+          <div class="check-item"><span class="check-dot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#22C1C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Secure &amp; reliable</div>
+          <div class="check-item"><span class="check-dot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#22C1C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Easy to manage</div>
+          <div class="check-item"><span class="check-dot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#22C1C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Scalable for future growth</div>
+          <div class="check-item"><span class="check-dot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#22C1C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dedicated support</div>
+        </div>
+        <div class="expertise-cta" id="exp-cta">
+          <div>
+            <h3 style="font-size:22px;font-weight:700;letter-spacing:-0.01em;color:var(--text)">Let's build your store</h3>
+            <p>Get a working e-commerce site, start to finish.</p>
+          </div>
+          <a class="btn-primary" href="#contact">Get Started</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-line"></div>
+
+    <!-- 3. MOVED EXISTING ELEMENT — Previously near beginning, now preserved at the END -->
+    <section class="moved-hero-section" id="about">
+      <div class="moved-hero-inner">
+        <div class="eyebrow-pill" id="moved-pill">PROFESSIONAL <span>E-COMMERCE</span></div>
+        <h2 class="moved-headline" id="moved-headline">
+          Build your brand.<br>Grow your <span class="accent">business.</span>
+        </h2>
+        <p class="moved-sub" id="moved-sub">We design and develop e-commerce websites that turn your products into online success — modern, secure, and built to sell.</p>
+        <div class="cta-row" id="moved-cta">
+          <a class="btn-primary" href="#contact">Let's talk</a>
+          <a class="btn-secondary" href="#services">See what's included</a>
+        </div>
+        <div class="traits-row" id="moved-traits">
+          <div class="trait"><div class="num">01</div><div class="label">Sell online</div></div>
+          <div class="trait"><div class="num">02</div><div class="label">Reach more customers</div></div>
+          <div class="trait"><div class="num">03</div><div class="label">Secure transactions</div></div>
+          <div class="trait"><div class="num">04</div><div class="label">Grow faster</div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-line"></div>
+
+    <!-- 4. END — FOOTER / CONTACT -->
+    <footer id="contact">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-cta-text">Ready to turn your products into an online success?</div>
+          <div class="footer-contact">
+            <a href="tel:8608962057">8608962057</a>
+            <a href="mailto:suriyaar.ace@gmail.com">suriyaar.ace@gmail.com</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>Olytabi — E-commerce solutions — Your success, our mission</span>
+          <div class="socials">
+            <a href="#" aria-label="Instagram">IG</a>
+            <a href="#" aria-label="Facebook">FB</a>
+            <a href="#" aria-label="LinkedIn">IN</a>
+            <a href="#" aria-label="X">X</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  /* ============ EXACT 3D MODEL & GEOMETRY (COMPLETELY PRESERVED) ============
+     Original parametric "O" ring — editable CAD-style dimensions (mm).
+     Kept 100% faithful to the existing geometry, materials, lighting & vertex colors. */
+  var RING_PARAMS = {
+    outerWidth: 200,
+    outerHeight: 206,
+    thickness: 25,
+    innerWidth: 124,
+    innerHeight: 126,
+    outerRadius: 36,
+    innerRadius: 12,
+    rotationDeg: 5,
+    edgeFillet: 5,
+    twistTurns: 1,
+    pathWobble: 9
+  };
+
+  function roundedRectCrossSection(w, h, r, segPerCorner){
+    r = Math.min(r, w*0.45, h*0.45);
+    var corners = [
+      {cx:  w/2-r, cy:  h/2-r, start:0},
+      {cx: -w/2+r, cy:  h/2-r, start:90},
+      {cx: -w/2+r, cy: -h/2+r, start:180},
+      {cx:  w/2-r, cy: -h/2+r, start:270}
+    ];
+    var pts = [];
+    corners.forEach(function(c){
+      for(var s=0; s<=segPerCorner; s++){
+        var ang = (c.start + (s/segPerCorner)*90) * Math.PI/180;
+        pts.push(new THREE.Vector2(c.cx + Math.cos(ang)*r, c.cy + Math.sin(ang)*r));
+      }
+    });
+    return pts;
+  }
+
+  function buildRingGeometry(params){
+    var P = params || RING_PARAMS;
+    var S = 1/90; // mm -> scene units
+
+    var avgOuterR = (P.outerWidth + P.outerHeight)/4;
+    var avgInnerR = (P.innerWidth + P.innerHeight)/4;
+    var pathRadius = (avgOuterR + avgInnerR)/2;
+    var wallWidth = Math.max(10, avgOuterR - avgInnerR);
+    var wob = P.pathWobble != null ? P.pathWobble : 9;
+    var lobes = 5;
+
+    function pathPoint(t){
+      var theta = t*Math.PI*2;
+      var r = pathRadius + Math.sin(theta*lobes)*wob*0.7 + Math.cos(theta*2)*wob*0.35;
+      return new THREE.Vector3(Math.cos(theta)*r*S, Math.sin(theta)*r*S, 0);
+    }
+    var N = 200, pathPts = [];
+    for(var i=0;i<N;i++){ pathPts.push(pathPoint(i/N)); }
+    var curve = new THREE.CatmullRomCurve3(pathPts, true, 'catmullrom', 0.5);
+
+    var crossW = wallWidth * S;
+    var crossH = P.thickness * S;
+    var crossR = Math.min(P.edgeFillet, wallWidth*0.4, P.thickness*0.4) * S;
+    var section = roundedRectCrossSection(crossW, crossH, crossR, 6);
+    var M = section.length;
+
+    var twistTurns = P.twistTurns != null ? P.twistTurns : 1;
+    var ringsCount = 260;
+    var refUp = new THREE.Vector3(0,0,1);
+
+    var colorA = new THREE.Color('#1EC8CE');
+    var colorB = new THREE.Color('#BFEFEF');
+    var colorC = new THREE.Color('#FF6A1A');
+    var colorD = new THREE.Color('#FFC49B');
+    function colorAt(u){
+      var uu = (u+0.25) % 1;
+      if(uu < 0.28) return colorA.clone().lerp(colorB, uu/0.28);
+      if(uu < 0.5)  return colorB.clone().lerp(colorC, (uu-0.28)/0.22);
+      if(uu < 0.75) return colorC.clone().lerp(colorD, (uu-0.5)/0.25);
+      return colorD.clone().lerp(colorA, (uu-0.75)/0.25);
+    }
+
+    var positions = [], colorsArr = [];
+    for(var ri=0; ri<=ringsCount; ri++){
+      var u = (ri/ringsCount) % 1;
+      var p = curve.getPointAt(u);
+      var tangent = curve.getTangentAt(u).normalize();
+      var radialDir = new THREE.Vector3().crossVectors(tangent, refUp);
+      if(radialDir.lengthSq() < 1e-6) radialDir.set(1,0,0);
+      radialDir.normalize();
+      var zDir = new THREE.Vector3().crossVectors(radialDir, tangent).normalize();
+
+      var theta = twistTurns * Math.PI*2 * u;
+      var cosT = Math.cos(theta), sinT = Math.sin(theta);
+      var axisW = radialDir.clone().multiplyScalar(cosT).add(zDir.clone().multiplyScalar(sinT));
+      var axisH = radialDir.clone().multiplyScalar(-sinT).add(zDir.clone().multiplyScalar(cosT));
+
+      var c = colorAt(u);
+      for(var m=0;m<M;m++){
+        var sp = section[m];
+        var world = new THREE.Vector3()
+          .addScaledVector(axisW, sp.x)
+          .addScaledVector(axisH, sp.y)
+          .add(p);
+        positions.push(world.x, world.y, world.z);
+        colorsArr.push(c.r, c.g, c.b);
+      }
+    }
+
+    var indices = [];
+    for(var ri2=0; ri2<ringsCount; ri2++){
+      for(var m2=0; m2<M; m2++){
+        var m2n = (m2+1) % M;
+        var a = ri2*M + m2, b = ri2*M + m2n;
+        var cIdx = (ri2+1)*M + m2, d = (ri2+1)*M + m2n;
+        indices.push(a, cIdx, b,  b, cIdx, d);
+      }
+    }
+
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(colorsArr, 3));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+    geo.center();
+    if(P.rotationDeg){ geo.rotateZ(P.rotationDeg * Math.PI/180); }
+    return geo;
+  }
+
+  function buildRingMaterial(){
+    return new THREE.MeshStandardMaterial({
+      vertexColors: true,
+      metalness:0.15,
+      roughness:0.32,
+      envMapIntensity:1.1
+    });
+  }
+
+  function makeLights(targetScene){
+    var hemi = new THREE.HemisphereLight(0xffffff, 0x141414, 0.7);
+    targetScene.add(hemi);
+
+    var key = new THREE.DirectionalLight(0xffffff, 1.25);
+    key.position.set(4, 6, 6);
+    targetScene.add(key);
+
+    var fill = new THREE.DirectionalLight(0xBFEFEF, 0.6);
+    fill.position.set(-5, -2, 3);
+    targetScene.add(fill);
+
+    var rim = new THREE.DirectionalLight(0xFFC49B, 0.8);
+    rim.position.set(0, -5, -4);
+    targetScene.add(rim);
+
+    return { hemi:hemi, key:key, fill:fill, rim:rim };
+  }
+
+  /* ============ Custom Cursor ============ */
+  var cursorEl = document.getElementById('cursor');
+  var cursorDotEl = document.getElementById('cursor-dot');
+  var mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+  var curX = mouseX, curY = mouseY;
+  var cursorActive = false;
+
+  window.addEventListener('mousemove', function(e){
+    mouseX = e.clientX; mouseY = e.clientY;
+    if(!cursorActive){
+      cursorActive = true;
+      cursorEl.classList.add('visible');
+      cursorDotEl.classList.add('visible');
+    }
+    cursorDotEl.style.left = mouseX + 'px';
+    cursorDotEl.style.top = mouseY + 'px';
+  });
+
+  document.querySelectorAll('a, button, .service-item, .check-item, .trait').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ cursorEl.classList.add('expanded'); });
+    el.addEventListener('mouseleave', function(){ cursorEl.classList.remove('expanded'); });
+  });
+
+  function renderCursor(){
+    curX += (mouseX - curX) * 0.16;
+    curY += (mouseY - curY) * 0.16;
+    cursorEl.style.left = curX + 'px';
+    cursorEl.style.top = curY + 'px';
+    requestAnimationFrame(renderCursor);
+  }
+  renderCursor();
+
+  /* ============ Main 3D Scene (Unified Single Model from Loading to Hero) ============ */
+  var mainCanvas = document.getElementById('main-canvas');
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 0, 7);
+
+  var renderer = new THREE.WebGLRenderer({canvas:mainCanvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  function sizeMain(){
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  sizeMain();
+  var mainLights = makeLights(scene);
+
+  var ringGeo = buildRingGeometry(RING_PARAMS);
+  var ringMat = buildRingMaterial();
+  ringMat.transparent = true;
+  ringMat.opacity = 1;
+
+  var group = new THREE.Group();
+  var ringMesh = new THREE.Mesh(ringGeo, ringMat);
+  group.add(ringMesh);
+  group.scale.setScalar(0.001);
+  group.position.set(0, 0, 0);
+  scene.add(group);
+
+  // Loading progress driver on the main 3D model
+  var loadProgress = 0;
+  var loaderPctEl = document.getElementById('loader-pct');
+  var loaderBarFill = document.getElementById('loader-bar-fill');
+  var loaderDone = false;
+  var introSettled = false;
+  var introActive = false;
+
+  function driveLoadProgress(){
+    var target = 100;
+    var step = function(){
+      loadProgress += (target - loadProgress) * 0.065 + 0.5;
+      if(loadProgress > 99.4) loadProgress = 100;
+      var floorP = Math.floor(loadProgress);
+      loaderPctEl.textContent = floorP + '%';
+      if(loaderBarFill) loaderBarFill.style.width = floorP + '%';
+
+      // The exact same 3D model grows smoothly into view during loading
+      if(!loaderDone){
+        var s = Math.min(1, loadProgress / 100);
+        var scales = getModelScales();
+        group.scale.setScalar(0.001 + s * (scales.big - 0.001));
+        group.position.set(0, 0, 0);
+      }
+
+      if(loadProgress < 100){
+        requestAnimationFrame(step);
+      } else {
+        onLoadComplete();
+      }
+    };
+    step();
+  }
+  setTimeout(driveLoadProgress, 150);
+
+  /* ============ Dynamic Scale & Lockup Calculations ============ */
+  var lytabiLetters = document.querySelectorAll('.lytabi-letter');
+  var lytabiLockupWrap = document.getElementById('olytabi-lockup-wrap');
+  var lytabiLockup = document.getElementById('olytabi-lockup');
+  var modelAnchor = document.getElementById('model-anchor');
+  var lytabiText = document.getElementById('lytabi-text');
+  var scrollIndicator = document.getElementById('scroll-indicator');
+  var contentSections = document.getElementById('content-sections');
+    var navEl = document.getElementById('nav');
+
+  function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+  function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
+  function easeInCubic(t){ return t*t*t; }
+  function clamp01(t){ return Math.max(0, Math.min(1, t)); }
+  function lerp(a, b, t){ return a + (b - a) * t; }
+
+  // 3D Model dimensions in scene units (at scale = 1, width is ~200/90 = 2.22 units)
+  var MODEL_BASE_W = (RING_PARAMS.outerWidth / 90);
+  var MODEL_BASE_H = (RING_PARAMS.outerHeight / 90);
+
+  function getVisibleWorldDimensions(){
+    var halfFovRad = (camera.fov / 2) * Math.PI / 180;
+    var vH = 2 * Math.tan(halfFovRad) * camera.position.z;
+    var vW = vH * camera.aspect;
+    return { width: vW, height: vH };
+  }
+
+  // Convert 3D world coords to screen pixels
+  function worldToScreen(worldX, worldY){
+    var vDim = getVisibleWorldDimensions();
+    var x = window.innerWidth * (0.5 + worldX / vDim.width);
+    var y = window.innerHeight * (0.5 - worldY / vDim.height);
+    return { x: x, y: y };
+  }
+
+  // Convert screen pixel position to 3D world coords
+  function screenToWorld(screenX, screenY){
+    var vDim = getVisibleWorldDimensions();
+    var x = ((screenX / window.innerWidth) - 0.5) * vDim.width;
+    var y = (0.5 - (screenY / window.innerHeight)) * vDim.height;
+    return { x: x, y: y };
+  }
+
+  // Calculate scales satisfying all requirements:
+  // Requirement 1: Desktop occupies roughly 55-70% hero viewport width, responsive on mobile, clearly visible without being cropped!
+  function getModelScales(){
+    var vDim = getVisibleWorldDimensions();
+    var isMobile = window.innerWidth <= 860;
+
+    // Bigger and broader hero presentation (prominent and dominant, without cropping)
+    var targetWidthRatio = isMobile ? 0.88 : 0.68;
+    var scaleByWidth = (vDim.width * targetWidthRatio) / MODEL_BASE_W;
+    var scaleByHeight = (vDim.height * 0.82) / MODEL_BASE_H;
+    var scaleBig = Math.min(scaleByWidth, scaleByHeight);
+
+    // In logo lockup state: kept noticeably larger and prominent
+    var scaleLogo = isMobile ? (scaleBig * 0.68) : (scaleBig * 0.74);
+
+    return {
+      big: scaleBig,
+      logo: scaleLogo
+    };
+  }
+
+  // Get scroll progress (0..1) through the 600vh spacer
+  function getScrollProgress(){
+    var spacer = document.getElementById('scroll-spacer');
+    if(!spacer) return 0;
+    var spacerHeight = spacer.offsetHeight;
+    var scrollY = window.scrollY || window.pageYOffset || 0;
+    var maxScroll = spacerHeight - window.innerHeight;
+    if(maxScroll <= 0) return 0;
+    return clamp01(scrollY / maxScroll);
+  }
+
+  var introStarted = false;
+  var introComplete = false;
+  var idleSpin = 0;
+  var floatPhase = 0;
+
+  // Cached letter offsets relative to model center for absorption animation
+  var initialLetterRelativeX = [];
+
+  function updateLockupAnchor(){
+    var scales = getModelScales();
+    var vDim = getVisibleWorldDimensions();
+    var logoWorldW = MODEL_BASE_W * scales.logo;
+    var logoPixelW = (logoWorldW / vDim.width) * window.innerWidth;
+    var logoWorldH = MODEL_BASE_H * scales.logo;
+    var logoPixelH = (logoWorldH / vDim.height) * window.innerHeight;
+
+    modelAnchor.style.width = logoPixelW + 'px';
+    modelAnchor.style.height = logoPixelH + 'px';
+
+    if(initialLetterRelativeX.length === 0){
+      var anchorRect = modelAnchor.getBoundingClientRect();
+      var anchorCenterX = anchorRect.left + anchorRect.width / 2;
+      lytabiLetters.forEach(function(letter){
+        var rect = letter.getBoundingClientRect();
+        var letterCenterX = rect.left + rect.width / 2;
+        initialLetterRelativeX.push(letterCenterX - anchorCenterX);
+      });
+    }
+  }
+
+  /* ============ Scroll Animation Routine ============ */
+  function updateScrollAnimation(){
+    if(!introSettled || introActive) return;
+
+    var p = getScrollProgress();
+    var scales = getModelScales();
+    var vDim = getVisibleWorldDimensions();
+    var isMobile = window.innerWidth <= 860;
+
+    updateLockupAnchor();
+
+    var anchorRect = modelAnchor.getBoundingClientRect();
+    var anchorScreenX = anchorRect.left + anchorRect.width / 2;
+    var anchorScreenY = anchorRect.top + anchorRect.height / 2;
+    var logoWorldPos = screenToWorld(anchorScreenX, anchorScreenY);
+
+    var targetWorldX = logoWorldPos.x;
+    var targetWorldY = logoWorldPos.y;
+    var currentScale = scales.logo;
+
+    /* Post-load scroll interaction:
+       - Starts with [MODEL=O] LYTABI lockup centered!
+       - On scroll:
+         0.00 - 0.12: Lockup holds centered
+         0.12 - 0.85: Letters absorb smoothly into model opening,
+                      model concurrently glides back to viewport CENTER (0, 0)
+                      and expands to large scale (scaleBig)
+         0.85 - 1.00+: Model remains CENTERED and LARGE (not pushed to top),
+                       nav and content sections reveal and scroll cleanly!
+    */
+
+    if(p < 0.12){
+      // Holding in logo position as the 'O'
+      targetWorldX = logoWorldPos.x;
+      targetWorldY = logoWorldPos.y;
+      currentScale = scales.logo;
+
+      lytabiLetters.forEach(function(letter){
+        letter.style.opacity = '1';
+        letter.style.transform = 'none';
+        letter.style.filter = 'none';
+      });
+      lytabiLockupWrap.style.opacity = '1';
+
+    } else if(p < 0.88){
+      // Smooth absorption into opening & model returns to center
+      var absorbProgress = easeInOutCubic(clamp01((p - 0.12) / 0.70));
+
+      // Model glides from left logo position BACK TO CENTER, expanding to large scale
+      targetWorldX = lerp(logoWorldPos.x, 0, absorbProgress);
+      targetWorldY = lerp(logoWorldPos.y, 0, absorbProgress);
+      currentScale = lerp(scales.logo, scales.big, absorbProgress);
+
+      for(var i = 0; i < lytabiLetters.length; i++){
+        var letter = lytabiLetters[i];
+        var staggerOffset = i * 0.055;
+        var letterT = clamp01((absorbProgress - staggerOffset) / (1 - staggerOffset));
+        var letterEased = easeInOutCubic(letterT);
+
+        var deltaX = initialLetterRelativeX[i] || (100 + i * 50);
+        var moveX = -deltaX * letterEased;
+        var moveY = Math.sin(letterEased * Math.PI) * (i % 2 === 0 ? 10 : -10);
+
+        var letterScale = lerp(1, 0.08, letterEased);
+        var letterOpacity = lerp(1, 0, Math.pow(letterEased, 1.2));
+        var letterBlur = lerp(0, 10, letterEased);
+        var zDepth = -letterEased * 90;
+
+        letter.style.opacity = letterOpacity;
+        letter.style.transform = 'translate3d(' + moveX + 'px, ' + moveY + 'px, ' + zDepth + 'px) scale(' + letterScale + ')';
+        letter.style.filter = 'blur(' + letterBlur + 'px)';
+      }
+      lytabiLockupWrap.style.opacity = (p < 0.84) ? '1' : '0';
+
+    } else {
+      // Letters fully absorbed, model remains in DEAD CENTER and LARGE
+      targetWorldX = 0;
+      targetWorldY = 0;
+      currentScale = scales.big;
+
+      lytabiLetters.forEach(function(letter){
+        letter.style.opacity = '0';
+      });
+      lytabiLockupWrap.style.opacity = '0';
+    }
+
+    group.position.x = targetWorldX;
+    currentTargetBaseY = targetWorldY;
+    group.position.y = targetWorldY + Math.sin(floatPhase) * 0.04;
+    group.scale.setScalar(currentScale);
+
+    if(p > 0.03){
+      scrollIndicator.classList.remove('show');
+    }
+
+    // Content sections and nav reveal after letters are absorbed
+    if(p >= 0.85 && !introComplete){
+      introComplete = true;
+      navEl.classList.add('show');
+      contentSections.classList.add('show');
+      onScrollReveal();
+    } else if(p < 0.78 && introComplete){
+      introComplete = false;
+      navEl.classList.remove('show');
+      contentSections.classList.remove('show');
+    }
+  }
+
+  function onScrollReveal(){
+    var vh = window.innerHeight;
+    document.querySelectorAll('.section-kicker, .section-title, .expertise h2, .footer-top, .expertise-cta, .eyebrow-pill, .moved-headline, .moved-sub, .cta-row, .traits-row').forEach(function(el){
+      if(el.getBoundingClientRect().top < vh * 0.88){
+        el.classList.add('in');
+      }
+    });
+    document.querySelectorAll('.service-item').forEach(function(el, i){
+      if(el.getBoundingClientRect().top < vh * 0.90){
+        setTimeout(function(){ el.classList.add('in'); }, i * 60);
+      }
+    });
+    document.querySelectorAll('.check-item').forEach(function(el, i){
+      if(el.getBoundingClientRect().top < vh * 0.90){
+        setTimeout(function(){ el.classList.add('in'); }, i * 80);
+      }
+    });
+  }
+
+  window.addEventListener('scroll', function(){
+    updateScrollAnimation();
+    if(introComplete) onScrollReveal();
+  }, {passive:true});
+
+  /* ============ Main Render Loop ============ */
+  var currentTargetBaseY = 0;
+  function animateMain(){
+    idleSpin += 0.0032;
+    floatPhase += 0.009;
+
+    group.rotation.y = idleSpin;
+    group.rotation.x = Math.sin(floatPhase * 0.7) * 0.05;
+
+    // Continuous smooth organic floating bob
+    if(introSettled && !introActive){
+      group.position.y = currentTargetBaseY + Math.sin(floatPhase) * 0.04;
+    }
+
+    // Interactive cursor proximity glow
+    var modelScreen = worldToScreen(group.position.x, group.position.y);
+    var dx = mouseX - modelScreen.x;
+    var dy = mouseY - modelScreen.y;
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    var glow = Math.max(0, 1 - dist / 400);
+    mainLights.rim.intensity = 0.8 + glow * 1.2;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animateMain);
+  }
+  animateMain();
+
+  window.addEventListener('resize', function(){
+    sizeMain();
+    initialLetterRelativeX = [];
+    updateLockupAnchor();
+    if(introSettled) updateScrollAnimation();
+  });
+
+  /* ============ Seamless Transition from Loading -> OLYTABI "O" ============ */
+  function onLoadComplete(){
+    loaderDone = true;
+
+    // 1. Fade out the loader HUD (the progress bar & percentage)
+    document.getElementById('loader').classList.add('phase-out');
+
+    // 2. The EXACT SAME 3D model now glides smoothly from center into the "O" of OLYTABI
+    updateLockupAnchor();
+    var anchorRect = modelAnchor.getBoundingClientRect();
+    var anchorScreenX = anchorRect.left + anchorRect.width / 2;
+    var anchorScreenY = anchorRect.top + anchorRect.height / 2;
+    var logoWorldPos = screenToWorld(anchorScreenX, anchorScreenY);
+    var scales = getModelScales();
+
+    introActive = true;
+    lytabiLockupWrap.style.opacity = '1';
+
+    var glideStart = Date.now();
+    var glideDuration = 1200; // 1.2s smooth glide into the "O" position
+    var lettersRevealed = false;
+
+    function glideToO(){
+      var elapsed = Date.now() - glideStart;
+      var t = Math.min(1, elapsed / glideDuration);
+      var eased = easeInOutCubic(t);
+
+      group.position.x = lerp(0, logoWorldPos.x, eased);
+      group.position.y = lerp(0, logoWorldPos.y, eased);
+      group.scale.setScalar(lerp(scales.big, scales.logo, eased));
+
+      // As the model settles into the "O" position, sequentially reveal L Y T A B I
+      if(t >= 0.40 && !lettersRevealed){
+        lettersRevealed = true;
+        lytabiLetters.forEach(function(letter, idx){
+          setTimeout(function(){
+            letter.style.transition = 'opacity 0.5s cubic-bezier(.16,1,.3,1), transform 0.5s cubic-bezier(.16,1,.3,1)';
+            letter.style.opacity = '1';
+            letter.style.transform = 'translateX(0px)';
+          }, idx * 75);
+        });
+      }
+
+      if(t < 1){
+        requestAnimationFrame(glideToO);
+      } else {
+        introActive = false;
+        introSettled = true;
+        // Clean transition inline styles so scroll handler has full control
+        setTimeout(function(){
+          lytabiLetters.forEach(function(letter){
+            letter.style.transition = 'none';
+          });
+          scrollIndicator.classList.add('show');
+          updateScrollAnimation();
+        }, 600);
+      }
+    }
+    requestAnimationFrame(glideToO);
+  }
+
+})();
+</script>
+</body>
+</html>
