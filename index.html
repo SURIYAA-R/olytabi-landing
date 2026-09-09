@@ -26,12 +26,17 @@
     --glass-border:rgba(240,236,230,0.08);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:auto;}
+  html{
+    scroll-behavior:auto;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
+  }
   body{
     background:var(--bg);
     color:var(--text);
     font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
     overflow-x:hidden;
+    touch-action:pan-y;
     cursor:none;
   }
   ::selection{background:var(--orange);color:white;}
@@ -121,8 +126,8 @@
   }
   #ring-stage canvas{
     display:block;
-    pointer-events:auto;
-    touch-action:none;
+    pointer-events:none;
+    touch-action:pan-y;
   }
 
   /* ---------- OLYTABI Lockup Overlay ---------- */
@@ -549,6 +554,7 @@
   }
 
   @media(max-width:860px){
+    #scroll-spacer{height:200vh;}
     body{cursor:auto;}
     #cursor, #cursor-dot{display:none;}
     #nav{padding:18px 24px;}
