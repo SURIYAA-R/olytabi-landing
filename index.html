@@ -22,12 +22,12 @@
     --bg-card:rgba(18,18,18,0.55);
     --bg-card-hover:rgba(28,28,28,0.75);
     --text:#ffffff;
-    --text-dim:rgba(255,255,255,0.82);
-    --text-dimmer:rgba(255,255,255,0.60);
-    --line:rgba(255,255,255,0.14);
-    --line-strong:rgba(255,255,255,0.28);
+    --text-dim:rgba(255,255,255,0.92);
+    --text-dimmer:rgba(255,255,255,0.80);
+    --line:rgba(255,255,255,0.18);
+    --line-strong:rgba(255,255,255,0.35);
     --glass:rgba(14,14,14,0.45);
-    --glass-border:rgba(255,255,255,0.12);
+    --glass-border:rgba(255,255,255,0.20);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{
@@ -397,7 +397,7 @@
   }
   .service-idx{
     font-size:14px;font-weight:700;letter-spacing:0.1em;
-    color:rgba(255,255,255,0.75);
+    color:var(--orange);
     padding-top:4px;
   }
   .service-body h3{
@@ -563,7 +563,7 @@
   }
   .trait .num{
     font-size:13px;font-weight:700;letter-spacing:0.15em;
-    color:rgba(255,255,255,0.75);margin-bottom:8px;
+    color:var(--orange);margin-bottom:8px;
   }
   .trait .label{
     font-size:17px;font-weight:600;color:var(--text);
@@ -607,11 +607,11 @@
   }
   .footer-contact a:hover{color:var(--orange);}
   .footer-bottom{
-    font-size:14px;color:var(--text-dimmer);
+    font-size:14px;color:rgba(255,255,255,0.88);
   }
   .socials{display:flex;gap:24px;}
   .socials a{
-    color:var(--text-dim);text-decoration:none;font-weight:600;
+    color:#ffffff;text-decoration:none;font-weight:700;
     font-size:12px;letter-spacing:0.1em;
     transition:color 0.2s ease;
   }
@@ -857,15 +857,79 @@
     color:var(--text-dim);max-width:760px;
   }
 
+  /* ---------- Team Section (ALL CAPS & CLEARLY VISIBLE) ---------- */
+  .team{
+    padding:140px 48px;
+    max-width:1280px;margin:0 auto;
+    position:relative;
+  }
+  .team-inner{max-width:1120px;margin:0 auto;}
+  .team-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:20px;
+    margin-top:48px;
+  }
+  .team-card{
+    padding:32px 24px;
+    background:var(--bg-card);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-border);
+    border-radius:18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    transition:transform 0.4s cubic-bezier(.25,.1,.25,1), border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease, opacity 0.6s ease;
+    opacity:0;transform:translateY(24px);
+  }
+  .team-card.in{
+    opacity:1;transform:translateY(0);
+  }
+  .team-card:hover{
+    transform:translateY(-6px);
+    background:var(--bg-card-hover);
+    border-color:rgba(255,106,26,0.6);
+    box-shadow:0 16px 40px -10px rgba(255,106,26,0.3);
+  }
+  .team-role-badge{
+    font-size:11px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--orange);
+    background:rgba(255,106,26,0.15);
+    border:1px solid rgba(255,106,26,0.35);
+    padding:6px 14px;
+    border-radius:100px;
+    align-self:flex-start;
+  }
+  .team-name{
+    font-size:clamp(18px, 1.4vw, 22px);
+    font-weight:800;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    color:#ffffff;
+    line-height:1.25;
+    margin-top:4px;
+  }
+  .team-role{
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.92);
+    line-height:1.5;
+  }
+
   /* ---------- Responsive: new sections ---------- */
   @media(max-width:860px){
-    .about-olytabi,.training,.roadmap,.faq{padding:80px 24px;}
+    .about-olytabi,.training,.roadmap,.faq,.team{padding:80px 24px;}
     .roadmap-grid{grid-template-columns:repeat(2,1fr);}
+    .team-grid{grid-template-columns:repeat(2,1fr);}
     .process-row{gap:0;}
   }
   @media(max-width:560px){
-    .about-olytabi,.training,.roadmap,.faq{padding:64px 18px;}
+    .about-olytabi,.training,.roadmap,.faq,.team{padding:64px 18px;}
     .roadmap-grid{grid-template-columns:1fr;}
+    .team-grid{grid-template-columns:1fr;}
   }
 
 </style>
@@ -923,6 +987,7 @@
       <li><a href="#expertise">Why OLYTABI</a></li>
       <li><a href="#about-olytabi">About</a></li>
       <li><a href="#training">Training</a></li>
+      <li><a href="#team">Team</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -1143,10 +1208,42 @@
           <button class="faq-question" aria-expanded="false">What makes OLYTABI different from other digital agencies?<span class="faq-icon">+</span></button>
           <div class="faq-answer"><p>OLYTABI brings together branding, website development, digital marketing, content, business consulting and training under one roof. We prioritise strategy before execution, understand the business context behind every brief, and measure success by your growth — not just deliverables.</p></div>
         </div>
+      </div>
+    </section>
+
+    <div class="section-line"></div>
+
+    <!-- 4. OUR TEAM SECTION -->
+    <section class="team" id="team">
+      <div class="team-inner">
+        <div class="section-kicker">OUR TEAM</div>
+        <h2 class="section-title">THE TALENT DRIVING DIGITAL GROWTH.</h2>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-role-badge">MARKETING &amp; BIZ DEV</div>
+            <div class="team-name">KAVIN VISHVESH A</div>
+            <div class="team-role">MARKETING MANAGER &amp; BUSINESS DEVELOPMENT EXECUTIVE</div>
+          </div>
+          <div class="team-card">
+            <div class="team-role-badge">WEB ENGINEERING</div>
+            <div class="team-name">SURYA</div>
+            <div class="team-role">WEB DEVELOPER</div>
+          </div>
+          <div class="team-card">
+            <div class="team-role-badge">SOCIAL MEDIA</div>
+            <div class="team-name">INFANTO</div>
+            <div class="team-role">SOCIAL MEDIA MANAGER</div>
+          </div>
+          <div class="team-card">
+            <div class="team-role-badge">CREATIVE CONTENT</div>
+            <div class="team-name">SIVA</div>
+            <div class="team-role">VIDEO EDITOR</div>
+          </div>
         </div>
       </div>
     </section>
-    <!-- 4. END — FOOTER / CONTACT -->
+
+    <!-- 5. END — FOOTER / CONTACT -->
     <footer id="contact">
       <div class="footer-inner">
         <div class="footer-top">
@@ -1160,8 +1257,32 @@
             <a href="mailto:suriyaar.ace@gmail.com">suriyaar.ace@gmail.com</a>
           </div>
         </div>
+
+        <!-- CORE TEAM MEMBERS FOOTER BAR -->
+        <div class="footer-team-bar" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:32px 0;margin:40px 0;">
+          <div style="font-size:12px;font-weight:800;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;margin-bottom:20px;">CORE TEAM MEMBERS</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:24px;">
+            <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;">
+              <span style="color:var(--orange);margin-right:6px;">•</span>KAVIN VISHVESH A
+              <span style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.90);margin-top:4px;letter-spacing:0.02em;">MARKETING MANAGER &amp; BUSINESS DEVELOPMENT EXECUTIVE</span>
+            </div>
+            <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;">
+              <span style="color:var(--orange);margin-right:6px;">•</span>SURYA
+              <span style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.90);margin-top:4px;letter-spacing:0.02em;">WEB DEVELOPER</span>
+            </div>
+            <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;">
+              <span style="color:var(--orange);margin-right:6px;">•</span>INFANTO
+              <span style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.90);margin-top:4px;letter-spacing:0.02em;">SOCIAL MEDIA MANAGER</span>
+            </div>
+            <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;">
+              <span style="color:var(--orange);margin-right:6px;">•</span>SIVA
+              <span style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.90);margin-top:4px;letter-spacing:0.02em;">VIDEO EDITOR</span>
+            </div>
+          </div>
+        </div>
+
         <div class="footer-bottom">
-          <div><span style="display:block;margin-bottom:8px;">OLYTABI — Creative Digital Growth Partner. Build your brand. Strengthen your digital presence. Generate opportunities. Grow with strategy.</span><span style="font-size:12px;color:var(--text-dimmer);">Branding &bull; Website Development &bull; E-Commerce &bull; Digital Marketing &bull; SEO &bull; Social Media &bull; Paid Ads &bull; Content &bull; Business Consulting &bull; Business Training &bull; Startup Support</span></div>
+          <div><span style="display:block;margin-bottom:8px;font-weight:600;">OLYTABI — Creative Digital Growth Partner. Build your brand. Strengthen your digital presence. Generate opportunities. Grow with strategy.</span><span style="font-size:13px;color:rgba(255,255,255,0.85);font-weight:500;">Branding &bull; Website Development &bull; E-Commerce &bull; Digital Marketing &bull; SEO &bull; Social Media &bull; Paid Ads &bull; Content &bull; Business Consulting &bull; Business Training &bull; Startup Support</span></div>
           <div class="socials">
             <a href="#" aria-label="Instagram">IG</a>
             <a href="#" aria-label="Facebook">FB</a>
@@ -1656,6 +1777,12 @@
     document.querySelectorAll('.check-item').forEach(function(el, i){
       if(el.getBoundingClientRect().top < vh * 0.90){
         setTimeout(function(){ el.classList.add('in'); }, i * 80);
+      }
+    });
+
+    document.querySelectorAll('.team-card').forEach(function(el, i){
+      if(el.getBoundingClientRect().top < vh * 0.94){
+        setTimeout(function(){ el.classList.add('in'); }, i * 70);
       }
     });
   }
