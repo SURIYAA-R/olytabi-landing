@@ -615,15 +615,71 @@
   }
   .footer-contact a:hover{color:var(--orange);}
   .footer-bottom{
-    font-size:14px;color:rgba(255,255,255,0.88);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding-top:40px;
+    border-top:1px solid rgba(255,255,255,0.1);
+    position:relative;
+    gap:24px;
+    font-size:14px;
+    color:rgba(255,255,255,0.88);
   }
-  .socials{display:flex;gap:24px;}
+  .footer-text-center{
+    text-align:center;
+    max-width:880px;
+    margin:0 auto;
+  }
+  .footer-text-center .footer-title{
+    display:block;
+    margin-bottom:12px;
+    font-weight:700;
+    font-size:16px;
+    color:#ffffff;
+    line-height:1.6;
+    letter-spacing:0.01em;
+  }
+  .footer-text-center .footer-sub{
+    font-size:14px;
+    color:rgba(255,255,255,0.82);
+    font-weight:500;
+    line-height:1.8;
+  }
+  .socials{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    width:100%;
+    gap:14px;
+    margin-top:12px;
+  }
   .socials a{
-    color:#ffffff;text-decoration:none;font-weight:700;
-    font-size:12px;letter-spacing:0.1em;
-    transition:color 0.2s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:#ffffff;
+    text-decoration:none;
+    font-weight:700;
+    font-size:14px;
+    padding:10px 18px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:30px;
+    transition:all 0.25s ease;
   }
-  .socials a:hover{color:var(--orange);}
+  .socials a:hover{
+    color:#ffffff;
+    background:var(--orange);
+    border-color:var(--orange);
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(255,106,26,0.35);
+  }
+  .socials a svg{
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+  }
 
     /* ---------- Comprehensive Responsive System ---------- */
   @media(max-width:1024px){
@@ -721,10 +777,13 @@
     .footer-cta-text{font-size:clamp(24px, 6vw, 34px);}
     .footer-contact a{font-size:18px;}
     .footer-bottom{
-      flex-direction:column;
-      align-items:flex-start;
-      gap:16px;
-      padding-top:24px;
+      align-items:center;
+      text-align:center;
+      padding-top:28px;
+    }
+    .socials{
+      justify-content:center;
+      flex-wrap:wrap;
     }
 
     .lytabi-letter{
@@ -1352,12 +1411,27 @@
         </div>
 
         <div class="footer-bottom">
-          <div><span style="display:block;margin-bottom:8px;font-weight:600;">OLYTABI — Creative Digital Growth Partner. Build your brand. Strengthen your digital presence. Generate opportunities. Grow with strategy.</span><span style="font-size:13px;color:rgba(255,255,255,0.85);font-weight:500;">Branding &bull; Website Development &bull; E-Commerce &bull; Digital Marketing &bull; SEO &bull; Social Media &bull; Paid Ads &bull; Content &bull; Business Consulting &bull; Business Training &bull; Startup Support</span></div>
+          <div class="footer-text-center">
+            <span class="footer-title">OLYTABI — Creative Digital Growth Partner. Build your brand. Strengthen your digital presence. Generate opportunities. Grow with strategy.</span>
+            <span class="footer-sub">Branding &bull; Website Development &bull; E-Commerce &bull; Digital Marketing &bull; SEO &bull; Social Media &bull; Paid Ads &bull; Content &bull; Business Consulting &bull; Business Training &bull; Startup Support</span>
+          </div>
           <div class="socials">
-            <a href="#" aria-label="Instagram">IG</a>
-            <a href="#" aria-label="Facebook">FB</a>
-            <a href="#" aria-label="LinkedIn">IN</a>
-            <a href="#" aria-label="X">X</a>
+            <a href="https://olytabi.vercel.app/#" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              <span>IG</span>
+            </a>
+            <a href="https://olytabi.vercel.app/#" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+              <span>FB</span>
+            </a>
+            <a href="https://olytabi.vercel.app/#" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+              <span>IN</span>
+            </a>
+            <a href="https://olytabi.vercel.app/#" target="_blank" rel="noopener" aria-label="X">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              <span>X</span>
+            </a>
           </div>
         </div>
       </div>
