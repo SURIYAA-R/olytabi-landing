@@ -887,7 +887,9 @@
     border-radius:18px;
     display:flex;
     flex-direction:column;
-    gap:12px;
+    align-items:center;
+    text-align:center;
+    gap:14px;
     transition:transform 0.4s cubic-bezier(.25,.1,.25,1), border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease, opacity 0.6s ease;
     opacity:0;transform:translateY(24px);
   }
@@ -907,7 +909,55 @@
     border:1px solid rgba(255,106,26,0.35);
     padding:6px 14px;
     border-radius:100px;
-    align-self:flex-start;
+    align-self:center;
+    text-align:center;
+  }
+  .team-avatar-wrap{
+    width:130px;
+    height:165px;
+    border-radius:50%;
+    margin:6px auto 2px auto;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,106,26,0.10));
+    border:2px solid rgba(255,106,26,0.45);
+    box-shadow:0 8px 24px -6px rgba(0,0,0,0.5), 0 0 16px rgba(255,106,26,0.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    flex-shrink:0;
+  }
+  .team-card:hover .team-avatar-wrap{
+    transform:scale(1.04);
+    border-color:var(--orange);
+    box-shadow:0 12px 30px -4px rgba(255,106,26,0.4), 0 0 25px rgba(255,106,26,0.35);
+  }
+  .team-avatar-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+    border-radius:50%;
+  }
+  .team-avatar-placeholder{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:rgba(255,255,255,0.35);
+    gap:6px;
+  }
+  .team-avatar-placeholder svg{
+    width:48px;
+    height:48px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.5;
+    opacity:0.75;
   }
   .team-name{
     font-size:clamp(18px, 1.4vw, 22px);
@@ -917,6 +967,7 @@
     color:#ffffff;
     line-height:1.25;
     margin-top:4px;
+    text-align:center;
   }
   .team-role{
     font-size:13px;
@@ -925,6 +976,7 @@
     text-transform:uppercase;
     color:rgba(255,255,255,0.92);
     line-height:1.5;
+    text-align:center;
   }
 
   /* ---------- Responsive: new sections ---------- */
@@ -1229,21 +1281,45 @@
         <div class="team-grid">
           <div class="team-card">
             <div class="team-role-badge">MARKETING &amp; BIZ DEV</div>
+            <div class="team-avatar-wrap">
+              <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="KAVIN VISHVESH A" /> here -->
+              <div class="team-avatar-placeholder">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+              </div>
+            </div>
             <div class="team-name">KAVIN VISHVESH A</div>
             <div class="team-role">MARKETING MANAGER &amp; BUSINESS DEVELOPMENT EXECUTIVE</div>
           </div>
           <div class="team-card">
             <div class="team-role-badge">WEB ENGINEERING</div>
+            <div class="team-avatar-wrap">
+              <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="SURYA" /> here -->
+              <div class="team-avatar-placeholder">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+              </div>
+            </div>
             <div class="team-name">SURYA</div>
             <div class="team-role">WEB DEVELOPER</div>
           </div>
           <div class="team-card">
             <div class="team-role-badge">SOCIAL MEDIA</div>
+            <div class="team-avatar-wrap">
+              <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="INFANTO" /> here -->
+              <div class="team-avatar-placeholder">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+              </div>
+            </div>
             <div class="team-name">INFANTO</div>
             <div class="team-role">SOCIAL MEDIA MANAGER</div>
           </div>
           <div class="team-card">
             <div class="team-role-badge">CREATIVE CONTENT</div>
+            <div class="team-avatar-wrap">
+              <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="SIVA" /> here -->
+              <div class="team-avatar-placeholder">
+                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+              </div>
+            </div>
             <div class="team-name">SIVA</div>
             <div class="team-role">VIDEO EDITOR</div>
           </div>
