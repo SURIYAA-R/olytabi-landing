@@ -48,17 +48,18 @@
   /* ---------- Custom Cursor ---------- */
   #cursor{
     position:fixed;top:0;left:0;
-    width:18px;height:18px;
+    width:20px;height:20px;
     border:1.5px solid var(--text);
     border-radius:50%;
     pointer-events:none;
     z-index:9999;
+    will-change:transform;
     transition:width 0.3s cubic-bezier(.25,.1,.25,1),
                height 0.3s cubic-bezier(.25,.1,.25,1),
                border-color 0.3s ease,
                background 0.3s ease,
                opacity 0.3s ease;
-    transform:translate(-50%,-50%);
+    transform:translate3d(-100px,-100px,0) translate(-50%,-50%);
     mix-blend-mode:difference;
     opacity:0;
   }
@@ -70,13 +71,14 @@
   }
   #cursor-dot{
     position:fixed;top:0;left:0;
-    width:5px;height:5px;
-    background:var(--text);
+    width:6px;height:6px;
+    background:var(--orange);
     border-radius:50%;
     pointer-events:none;
     z-index:10000;
-    transform:translate(-50%,-50%);
-    transition:opacity 0.3s ease;
+    will-change:transform;
+    transform:translate3d(-100px,-100px,0) translate(-50%,-50%);
+    transition:opacity 0.3s ease, background 0.3s ease;
     opacity:0;
   }
   #cursor-dot.visible{opacity:1;}
@@ -190,11 +192,15 @@
     bottom:40px;left:50%;
     transform:translateX(-50%);
     z-index:10;
-    pointer-events:none;
+    pointer-events:auto;
+    cursor:pointer;
     display:flex;flex-direction:column;align-items:center;gap:10px;
-    opacity:0;transition:opacity 0.6s ease;
+    opacity:0;transition:opacity 0.6s ease, transform 0.4s ease;
   }
-  #scroll-indicator.show{opacity:0.75;}
+  #scroll-indicator:hover{
+    transform:translateX(-50%) scale(1.08);
+  }
+  #scroll-indicator.show{opacity:0.85;}
   #scroll-indicator span{
     font-size:11px;letter-spacing:0.25em;text-transform:uppercase;
     color:#ffffff;font-weight:700;
@@ -207,10 +213,19 @@
     transform:rotate(45deg);
     filter:drop-shadow(0 2px 6px rgba(0,0,0,0.8));
     animation:bounce 2s infinite ease-in-out;
+    transition:transform 0.4s ease;
+  }
+  #scroll-indicator.up .chevron{
+    transform:rotate(-135deg);
+    animation:bounceUp 2s infinite ease-in-out;
   }
   @keyframes bounce{
     0%,100%{transform:rotate(45deg) translate(0,0);opacity:0.4;}
     50%{transform:rotate(45deg) translate(5px,5px);opacity:1;}
+  }
+  @keyframes bounceUp{
+    0%,100%{transform:rotate(-135deg) translate(0,0);opacity:0.4;}
+    50%{transform:rotate(-135deg) translate(-5px,-5px);opacity:1;}
   }
 
   /* ---------- 600vh Scroll Spacer for Hero Sequence ---------- */
@@ -1112,9 +1127,9 @@
     </div>
   </div>
 
-  <!-- Scroll Down Indicator -->
+  <!-- Scroll Indicator (Down / Up) -->
   <div id="scroll-indicator">
-    <span>Scroll to Explore</span>
+    <span id="scroll-text">Scroll to Explore</span>
     <div class="chevron"></div>
   </div>
 
@@ -1596,11 +1611,12 @@
     return { hemi:hemi, key:key, fill:fill, rim:rim };
   }
 
-  /* ============ Custom Cursor ============ */
+  /* ============ Custom Cursor (GPU Accelerated) ============ */
   var cursorEl = document.getElementById('cursor');
   var cursorDotEl = document.getElementById('cursor-dot');
   var mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
   var curX = mouseX, curY = mouseY;
+  var dotX = mouseX, dotY = mouseY;
   var cursorActive = false;
 
   window.addEventListener('mousemove', function(e){
@@ -1610,20 +1626,22 @@
       cursorEl.classList.add('visible');
       cursorDotEl.classList.add('visible');
     }
-    cursorDotEl.style.left = mouseX + 'px';
-    cursorDotEl.style.top = mouseY + 'px';
   });
 
-  document.querySelectorAll('a, button, .service-item, .check-item, .trait').forEach(function(el){
+  document.querySelectorAll('a, button, .service-item, .check-item, .trait, .team-card, #scroll-indicator, .faq-question').forEach(function(el){
     el.addEventListener('mouseenter', function(){ cursorEl.classList.add('expanded'); });
     el.addEventListener('mouseleave', function(){ cursorEl.classList.remove('expanded'); });
   });
 
   function renderCursor(){
-    curX += (mouseX - curX) * 0.16;
-    curY += (mouseY - curY) * 0.16;
-    cursorEl.style.left = curX + 'px';
-    cursorEl.style.top = curY + 'px';
+    curX += (mouseX - curX) * 0.18;
+    curY += (mouseY - curY) * 0.18;
+    dotX += (mouseX - dotX) * 0.85;
+    dotY += (mouseY - dotY) * 0.85;
+
+    cursorEl.style.transform = 'translate3d(' + curX + 'px, ' + curY + 'px, 0) translate(-50%, -50%)';
+    cursorDotEl.style.transform = 'translate3d(' + dotX + 'px, ' + dotY + 'px, 0) translate(-50%, -50%)';
+
     requestAnimationFrame(renderCursor);
   }
   renderCursor();
@@ -1944,8 +1962,34 @@
     });
   });
 
+  function checkScrollIndicatorState(){
+    var scrollText = document.getElementById('scroll-text');
+    var isNearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 140);
+    if(isNearBottom){
+      scrollIndicator.classList.add('show', 'up');
+      if(scrollText) scrollText.innerText = 'Scroll Up';
+    } else {
+      scrollIndicator.classList.remove('up');
+      if(introComplete){
+        scrollIndicator.classList.remove('show');
+      } else if(introSettled){
+        scrollIndicator.classList.add('show');
+        if(scrollText) scrollText.innerText = 'Scroll to Explore';
+      }
+    }
+  }
+
+  scrollIndicator.addEventListener('click', function(){
+    if(scrollIndicator.classList.contains('up')){
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    } else {
+      window.scrollTo({top: window.innerHeight * 0.8, behavior: 'smooth'});
+    }
+  });
+
   window.addEventListener('scroll', function(){
     updateScrollAnimation();
+    checkScrollIndicatorState();
     if(introComplete) onScrollReveal();
   }, {passive:true});
 
