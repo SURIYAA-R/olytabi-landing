@@ -167,7 +167,7 @@
   #lytabi-text{
     display:inline-flex;
     align-items:center;
-    margin-left:clamp(32px, 4.5vw, 64px); /* Clean spacing between 3D model and LYTABI letters */
+    margin-left:clamp(54px, 7vw, 96px); /* Guaranteed distance between 3D model and LYTABI letters */
     pointer-events:none;
   }
   .lytabi-letter{
@@ -1803,13 +1803,18 @@
     modelAnchor.style.height = logoPixelH + 'px';
 
     if(initialLetterRelativeX.length === 0 && introSettled){
-      var anchorRect = modelAnchor.getBoundingClientRect();
-      var anchorCenterX = anchorRect.left + anchorRect.width / 2;
-      lytabiLetters.forEach(function(letter){
-        var rect = letter.getBoundingClientRect();
-        var letterCenterX = rect.left + rect.width / 2;
-        initialLetterRelativeX.push(letterCenterX - anchorCenterX);
-      });
+      var firstLetter = lytabiLetters[0];
+      var isTransformed = firstLetter && firstLetter.style.transform && firstLetter.style.transform !== 'none';
+      if(!isTransformed){
+        var anchorRect = modelAnchor.getBoundingClientRect();
+        var anchorCenterX = anchorRect.left + anchorRect.width / 2;
+        initialLetterRelativeX = [];
+        lytabiLetters.forEach(function(letter){
+          var rect = letter.getBoundingClientRect();
+          var letterCenterX = rect.left + rect.width / 2;
+          initialLetterRelativeX.push(letterCenterX - anchorCenterX);
+        });
+      }
     }
   }
 
@@ -1834,8 +1839,8 @@
     var currentScale = scales.logo;
 
     if(p <= 0.02){
-      // Resting logo lockup state
-      targetWorldX = logoWorldPos.x;
+      // Resting logo lockup state (with safe left margin offset from L)
+      targetWorldX = logoWorldPos.x - 0.18;
       targetWorldY = logoWorldPos.y;
       currentScale = scales.logo;
 
