@@ -167,7 +167,7 @@
   #lytabi-text{
     display:inline-flex;
     align-items:center;
-    margin-left:18px; /* gap between 3D model and LYTABI letters */
+    margin-left:clamp(32px, 4.5vw, 64px); /* Clean spacing between 3D model and LYTABI letters */
     pointer-events:none;
   }
   .lytabi-letter{
@@ -1802,7 +1802,7 @@
     modelAnchor.style.width = logoPixelW + 'px';
     modelAnchor.style.height = logoPixelH + 'px';
 
-    if(initialLetterRelativeX.length === 0){
+    if(initialLetterRelativeX.length === 0 && introSettled){
       var anchorRect = modelAnchor.getBoundingClientRect();
       var anchorCenterX = anchorRect.left + anchorRect.width / 2;
       lytabiLetters.forEach(function(letter){
@@ -1889,11 +1889,12 @@
       lytabiLockupWrap.style.opacity = '0';
     }
 
-    // Smooth lerp to target
-    group.position.x += (targetWorldX - group.position.x) * 0.16;
-    group.position.y += (targetWorldY - group.position.y) * 0.16;
+    // Smooth lerp to target (faster response at top to prevent lag overlap)
+    var lerpFactor = (p <= 0.05) ? 0.35 : 0.18;
+    group.position.x += (targetWorldX - group.position.x) * lerpFactor;
+    group.position.y += (targetWorldY - group.position.y) * lerpFactor;
     var sDiff = currentScale - group.scale.x;
-    group.scale.addScalar(sDiff * 0.16);
+    group.scale.addScalar(sDiff * lerpFactor);
 
     // Nav and content reveal right after 1 scroll completes
     if(p >= 0.35 && !introComplete){
@@ -2079,10 +2080,15 @@
         setTimeout(function(){
           lytabiLetters.forEach(function(letter){
             letter.style.transition = 'none';
+            letter.style.transform = 'none';
+            letter.style.opacity = '1';
+            letter.style.filter = 'none';
           });
+          initialLetterRelativeX = [];
+          updateLockupAnchor();
           scrollIndicator.classList.add('show');
           updateScrollAnimation();
-        }, 600);
+        }, 650);
       }
     }
     requestAnimationFrame(glideToO);
