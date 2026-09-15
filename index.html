@@ -979,17 +979,39 @@
     text-align:center;
   }
 
+  /* ---------- Core Team Members (Footer) ---------- */
+  .footer-team-bar{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:48px 0;
+    margin:48px 0;
+  }
+  .footer-team-title{
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:0.2em;
+    color:var(--orange);
+    text-transform:uppercase;
+    margin-bottom:32px;
+    text-align:center;
+  }
+  .footer-team-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:20px;
+  }
+
   /* ---------- Responsive: new sections ---------- */
   @media(max-width:860px){
-    .about-olytabi,.training,.roadmap,.faq,.team{padding:80px 24px;}
+    .about-olytabi,.training,.roadmap,.faq{padding:80px 24px;}
     .roadmap-grid{grid-template-columns:repeat(2,1fr);}
-    .team-grid{grid-template-columns:repeat(2,1fr);}
+    .footer-team-grid{grid-template-columns:repeat(2,1fr);}
     .process-row{gap:0;}
   }
   @media(max-width:560px){
-    .about-olytabi,.training,.roadmap,.faq,.team{padding:64px 18px;}
+    .about-olytabi,.training,.roadmap,.faq{padding:64px 18px;}
     .roadmap-grid{grid-template-columns:1fr;}
-    .team-grid{grid-template-columns:1fr;}
+    .footer-team-grid{grid-template-columns:1fr;}
   }
 
 </style>
@@ -1271,63 +1293,7 @@
       </div>
     </section>
 
-    <div class="section-line"></div>
-
-    <!-- 4. OUR TEAM SECTION -->
-    <section class="team" id="team">
-      <div class="team-inner">
-        <div class="section-kicker">OUR TEAM</div>
-        <h2 class="section-title">THE TALENT DRIVING DIGITAL GROWTH.</h2>
-        <div class="team-grid">
-          <div class="team-card">
-            <div class="team-role-badge">MARKETING &amp; BIZ DEV</div>
-            <div class="team-avatar-wrap">
-              <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="KAVIN VISHVESH A" /> here -->
-              <div class="team-avatar-placeholder">
-                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-              </div>
-            </div>
-            <div class="team-name">KAVIN VISHVESH A</div>
-            <div class="team-role">MARKETING MANAGER &amp; BUSINESS DEVELOPMENT EXECUTIVE</div>
-          </div>
-          <div class="team-card">
-            <div class="team-role-badge">WEB ENGINEERING</div>
-            <div class="team-avatar-wrap">
-              <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="SURYA" /> here -->
-              <div class="team-avatar-placeholder">
-                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-              </div>
-            </div>
-            <div class="team-name">SURYA</div>
-            <div class="team-role">WEB DEVELOPER</div>
-          </div>
-          <div class="team-card">
-            <div class="team-role-badge">SOCIAL MEDIA</div>
-            <div class="team-avatar-wrap">
-              <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="INFANTO" /> here -->
-              <div class="team-avatar-placeholder">
-                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-              </div>
-            </div>
-            <div class="team-name">INFANTO</div>
-            <div class="team-role">SOCIAL MEDIA MANAGER</div>
-          </div>
-          <div class="team-card">
-            <div class="team-role-badge">CREATIVE CONTENT</div>
-            <div class="team-avatar-wrap">
-              <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="SIVA" /> here -->
-              <div class="team-avatar-placeholder">
-                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-              </div>
-            </div>
-            <div class="team-name">SIVA</div>
-            <div class="team-role">VIDEO EDITOR</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. END — FOOTER / CONTACT -->
+    <!-- 4. END — FOOTER / CONTACT -->
     <footer id="contact">
       <div class="footer-inner">
         <div class="footer-top">
@@ -1343,24 +1309,55 @@
         </div>
 
         <!-- CORE TEAM MEMBERS FOOTER BAR -->
-        <div class="footer-team-bar" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:32px 0;margin:40px 0;">
-          <div style="font-size:12px;font-weight:800;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;margin-bottom:20px;">CORE TEAM MEMBERS</div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:24px;">
-            <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;">
-              <span style="color:var(--orange);margin-right:6px;">•</span>KAVIN VISHVESH A
-              <span style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.90);margin-top:4px;letter-spacing:0.02em;">MARKETING MANAGER &amp; BUSINESS DEVELOPMENT EXECUTIVE</span>
+        <div class="footer-team-bar" id="team">
+          <div class="footer-team-title">CORE TEAM MEMBERS</div>
+          <div class="footer-team-grid">
+            <div class="team-card in">
+              <div class="team-role-badge">MARKETING &amp; BIZ DEV</div>
+              <div class="team-avatar-wrap">
+                <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="KAVIN VISHVESH A" /> here -->
+                <div class="team-avatar-placeholder">
+                  <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                </div>
+              </div>
+              <div class="team-name">KAVIN VISHVESH A</div>
+              <div class="team-role">MARKETING MANAGER &amp; BUSINESS DEVELOPMENT EXECUTIVE</div>
             </div>
-            <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;">
-              <span style="color:var(--orange);margin-right:6px;">•</span>SURYA
-              <span style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.90);margin-top:4px;letter-spacing:0.02em;">WEB DEVELOPER</span>
+
+            <div class="team-card in">
+              <div class="team-role-badge">WEB ENGINEERING</div>
+              <div class="team-avatar-wrap">
+                <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="SURYA" /> here -->
+                <div class="team-avatar-placeholder">
+                  <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                </div>
+              </div>
+              <div class="team-name">SURYA</div>
+              <div class="team-role">WEB DEVELOPER</div>
             </div>
-            <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;">
-              <span style="color:var(--orange);margin-right:6px;">•</span>INFANTO
-              <span style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.90);margin-top:4px;letter-spacing:0.02em;">SOCIAL MEDIA MANAGER</span>
+
+            <div class="team-card in">
+              <div class="team-role-badge">SOCIAL MEDIA</div>
+              <div class="team-avatar-wrap">
+                <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="INFANTO" /> here -->
+                <div class="team-avatar-placeholder">
+                  <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                </div>
+              </div>
+              <div class="team-name">INFANTO</div>
+              <div class="team-role">SOCIAL MEDIA MANAGER</div>
             </div>
-            <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;">
-              <span style="color:var(--orange);margin-right:6px;">•</span>SIVA
-              <span style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.90);margin-top:4px;letter-spacing:0.02em;">VIDEO EDITOR</span>
+
+            <div class="team-card in">
+              <div class="team-role-badge">CREATIVE CONTENT</div>
+              <div class="team-avatar-wrap">
+                <!-- Insert <img class="team-avatar-img" src="YOUR_IMAGE_URL" alt="SIVA" /> here -->
+                <div class="team-avatar-placeholder">
+                  <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                </div>
+              </div>
+              <div class="team-name">SIVA</div>
+              <div class="team-role">VIDEO EDITOR</div>
             </div>
           </div>
         </div>
